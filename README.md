@@ -15,7 +15,7 @@ Don't use it yet – but here's the vision:
 
 (def app
   (graphql-ring/handler
-    {:schema   "type Person { ... } ..."
+    {:schema   (clojure.java.io/resource "Schema.gql")
      :context  (fn [request] (read-auth request))
      :executor (fn [context canonical-operation] ...)}))
 
