@@ -1,5 +1,5 @@
 (ns alumbra.ring
-  (:require [alumbra.ring.raw :refer [raw-handler]]
+  (:require [alumbra.ring.handler :refer [raw-handler]]
             [alumbra
              [analyzer :refer [analyze-schema]]
              [canonical :refer [canonicalize*]]
