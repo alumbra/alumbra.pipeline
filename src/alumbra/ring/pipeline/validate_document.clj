@@ -6,5 +6,5 @@
   [{:keys [validator-fn]}
    {:keys [document variables] :as state}]
   (if-let [errors (validator-fn document variables)]
-    (done! (validation-error-response 400 errors))
+    (done! (validation-error-response errors))
     state))
