@@ -1,20 +1,23 @@
 # alumbra.ring
 
-This library provides a Ring handler implementation for GraphQL query execution.
-It uses pluggable components that consume/produce data structures as described
-in [alumbra.spec][alumbra-spec].
+This library provides a Ring handler implementation for [GraphQL][graphql] query
+execution, as well as the interactive [GraphiQL][graphiql] environment. It uses
+pluggable components that consume/produce data structures as described in
+[alumbra.spec][alumbra-spec].
 
+[graphql]: http://graphql.org
+[graphiql](https://github.com/graphql/graphiql)
 [alumbra-spec]: https://github.com/alumbra/alumbra.spec
 
 ## Usage
 
-Don't use it yet – but here's the vision:
+### GraphQL Endpoint
 
 ```clojure
-(require '[alumbra.ring :as graphql-ring])
+(require '[alumbra.ring :as ql])
 
 (def app
-  (graphql-ring/handler
+  (ql/handler
     {:schema   (clojure.java.io/resource "Schema.gql")
      :context  (fn [request] (read-auth request))
      :executor (fn [context canonical-operation] ...)}))
@@ -22,6 +25,26 @@ Don't use it yet – but here's the vision:
 (defonce server
   (start-server #'app {:port 8080}))
 ```
+
+### GraphiQL Web UI
+
+You can create a Ring handler exposing a [GraphiQL][graphiql] web UI for
+interactive GraphQL query execution using `alumbra.ring.graphiql/handler`:
+
+```clojure
+(require '[alumbra.ring.graphiql :as graphiql])
+
+(def graphiql
+  (graphiql/handler "/path/to/graphql"))
+
+(defonce server
+  (start-server #'graphiql {:port 8080}))
+```
+
+Assets will – by default – be loaded from [cdnjs][cdnjs]. See the docstring
+on how to customize this behaviour.
+
+[cdnjs]: https://cdnjs.com/
 
 ## License
 
