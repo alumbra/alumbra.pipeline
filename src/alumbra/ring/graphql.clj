@@ -34,9 +34,7 @@
            (raise t)))))))
 
 (defn handler
-  "Generate a Ring Handler for handling GraphQL requests. This is a more
-   customisable version of [[handler]] since it's not bound to the alumbra
-   parser by default.
+  "Generate a Ring Handler for handling GraphQL requests.
 
    - `:parser`: a parser function for GraphQL documents (producing a value
      conforming to either `:alumbra/document` or `:alumbra/parser-errors`),
@@ -49,7 +47,10 @@
    - `:executor`: an executor function, taking the request context, as well as
      a map conforming to `:alumbra/canonical-operation` and returning the resolved
      result.
-   "
+
+   The resultin ghandler will expect queries to be sent using `POST`,
+   represented by a JSON map with the keys `\"operationName\"`, `\"query\"`
+   and \"variables\"."
   [{:keys [parser validator canonicalizer executor context] :as opts}]
   {:pre [(fn? parser)
          (fn? validator)
