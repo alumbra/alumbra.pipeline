@@ -1,4 +1,4 @@
-(ns alumbra.ring.handler
+(ns alumbra.ring.graphql
   (:require [alumbra.ring.pipeline
              [core :refer [pipeline->>]]
              [canonicalize-operation :refer [canonicalize-operation]]
@@ -33,7 +33,7 @@
          (catch Throwable t
            (raise t)))))))
 
-(defn raw-handler
+(defn handler
   "Generate a Ring Handler for handling GraphQL requests. This is a more
    customisable version of [[handler]] since it's not bound to the alumbra
    parser by default.

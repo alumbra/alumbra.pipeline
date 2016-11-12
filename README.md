@@ -6,39 +6,53 @@ pluggable components that consume/produce data structures as described in
 [alumbra.spec][alumbra-spec].
 
 [graphql]: http://graphql.org
-[graphiql](https://github.com/graphql/graphiql)
+[graphiql]: https://github.com/graphql/graphiql
 [alumbra-spec]: https://github.com/alumbra/alumbra.spec
 
 ## Usage
 
-### GraphQL Endpoint
+### GraphQL Execution
+
+To create a GraphQL-capable endpoint, you need to supply a series of
+[alumbra.spec][alumbra-spec]-compatible components:
 
 ```clojure
-(require '[alumbra.ring :as ql])
+(require '[alumbra.ring.graphql :as graphql])
 
-(def app
-  (ql/handler
-    {:schema   (clojure.java.io/resource "Schema.gql")
-     :context  (fn [request] (read-auth request))
-     :executor (fn [context canonical-operation] ...)}))
-
-(defonce server
-  (start-server #'app {:port 8080}))
+(graphql/handler
+  {:parser        ...
+   :validator     ...
+   :canonicalizer ...
+   :context       (fn [request] (read-auth request))
+   :executor      (fn [context canonical-operation] ...)})
 ```
+
+Note that:
+
+- `:parser` should consume an `InputStream` and return a value conforming to
+  either `:alumbra/document` or `:alumbra/parser-errors`,
+- `:validator` should consume an `:alumbra/document` and return either `nil` or
+  a value conforming to `:alumbra/validation-errors`,
+- `:canonicalizer` should consume a validated `:alumbra/document` and return a
+  value conforming to `:alumbra/canonical-document`,
+- `:context` should consume a Ring request map and produce any value
+  representing the context of the GraphQL query,
+- `:executor` should consume the value produced by `:context`, as well as an
+  `:alumbra/canonical-operation`, and produce the resolved value as a map.
+
+A variant of this handler that uses pre-defined components can be found in
+the main [alumbra][alumbra] repository.
+
+[alumbra]: https://github.com/alumbra/alumbra
 
 ### GraphiQL Web UI
 
-You can create a Ring handler exposing a [GraphiQL][graphiql] web UI for
-interactive GraphQL query execution using `alumbra.ring.graphiql/handler`:
+To create a Ring handler exposing the interactive [GraphiQL][graphiql]
+environment you just have to supply the path (or URL) of your GraphQL endpoint.
 
 ```clojure
 (require '[alumbra.ring.graphiql :as graphiql])
-
-(def graphiql
-  (graphiql/handler "/path/to/graphql"))
-
-(defonce server
-  (start-server #'graphiql {:port 8080}))
+(graphiql/handler "/path/to/graphql")
 ```
 
 Assets will – by default – be loaded from [cdnjs][cdnjs]. See the docstring
