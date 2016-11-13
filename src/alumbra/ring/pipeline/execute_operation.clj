@@ -11,4 +11,5 @@
       ;; TODO Logging
       (errors/single-error-response
         500
-        "An unexpected error occured during execution."))))
+        (str "An unexpected error occured during execution:\n"
+             (.getMessage t))))))
