@@ -6,4 +6,4 @@
    {:keys [document operation-name variables] :as state}]
   (assoc state
          :canonical-operation
-         (canonicalize-fn document variables operation-name)))
+         (canonicalize-fn document operation-name variables)))
