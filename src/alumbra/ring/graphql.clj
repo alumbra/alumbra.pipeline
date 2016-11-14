@@ -48,7 +48,7 @@
      a map conforming to `:alumbra/canonical-operation` and returning the resolved
      result.
 
-   The resultin ghandler will expect queries to be sent using `POST`,
+   The resulting handler will expect queries to be sent using `POST`,
    represented by a JSON map with the keys `\"operationName\"`, `\"query\"`
    and \"variables\"."
   [{:keys [parser validator canonicalizer executor context] :as opts}]
