@@ -9,6 +9,7 @@
        :body   result})
     (catch Throwable t
       ;; TODO Logging
+      (.printStackTrace t)
       (errors/single-error-response
         500
         (str "An unexpected error occured during execution:\n"
