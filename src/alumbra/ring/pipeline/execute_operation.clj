@@ -4,9 +4,11 @@
 (defn execute-operation
   [{:keys [executor-fn]} {:keys [context canonical-operation]}]
   (try
-    (let [result (executor-fn context canonical-operation)]
+    (let [{:keys [errors] :as result} (executor-fn context canonical-operation)]
       {:status 200
-       :body   result})
+       :body   (if (seq errors)
+                 result
+                 (dissoc result :errors))})
     (catch Throwable t
       ;; TODO Logging
       (.printStackTrace t)
