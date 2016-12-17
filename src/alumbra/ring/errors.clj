@@ -17,10 +17,12 @@
 (defn format-validation-errors
   [validation-errors]
   (for [{:keys [alumbra/validation-error-class
-                alumbra/locations]}
+                alumbra/locations]
+         :as error}
         validation-errors]
     (merge
-      {:message (str "Error of class: " validation-error-class)}
+      {:message (str "Error of class: " validation-error-class)
+       :alumbra/validation-error error}
       (when (seq locations)
         {:locations
          (for [{:keys [row column]} locations]
