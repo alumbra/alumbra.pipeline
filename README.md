@@ -5,6 +5,9 @@ execution, as well as the interactive [GraphiQL][graphiql] environment. It uses
 pluggable components that consume/produce data structures as described in
 [alumbra.spec][alumbra-spec].
 
+[![Build Status](https://travis-ci.org/alumbra/alumbra.ring.svg?branch=master)](https://travis-ci.org/alumbra/alumbra.ring)
+[![Clojars Project](https://img.shields.io/clojars/v/alumbra/ring.svg)](https://clojars.org/alumbra/ring)
+
 [graphql]: http://graphql.org
 [graphiql]: https://github.com/graphql/graphiql
 [alumbra-spec]: https://github.com/alumbra/alumbra.spec
