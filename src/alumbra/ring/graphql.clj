@@ -7,6 +7,7 @@
              [execute-operation :refer [execute-operation]]
              [parse-document :refer [parse-document]]
              [validate-document :refer [validate-document]]]
+            [alumbra.ring.errors :as errors]
             [ring.middleware.json :as json]))
 
 (defn- handle-graphql-request
@@ -62,5 +63,6 @@
          :canonicalize-fn canonicalizer
          :executor-fn     executor
          :context-fn      context})
+      (errors/wrap)
       (json/wrap-json-response)
       (json/wrap-json-body)))
