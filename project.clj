@@ -1,4 +1,4 @@
-(defproject alumbra/ring "0.1.0-SNAPSHOT"
+(defproject alumbra/ring "0.1.0"
   :description "A Ring handler for GraphQL Execution"
   :url "https://github.com/alumbra/alumbra.ring"
   :license {:name "MIT License"
