@@ -17,7 +17,7 @@
        type HouseDog implements Pet { name: String!, owner: Person!, barkVolume: Int }
        type Cat implements Pet { name: String!, meowVolume: Int }
        type Dog implements Pet { name: String!, barkVolume: Int }
-       type QueryRoot { me: Person!, allPeople: [Person!] }
+       type QueryRoot { me: Person!, allPeople: [Person!], inc(x:Int!): Int! }
        schema { query: QueryRoot }"
       (analyzer/analyze-schema parser/parse-schema)))
 

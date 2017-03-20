@@ -8,7 +8,7 @@
     "Endpoint needs to be accesed using HTTP POST!"))
 
 (defn check-request-method
-  [{:keys [request-method] :as request}]
+  [_ {{:keys [request-method]} :request, :as state}]
   (if-not (= request-method :post)
     (done! invalid-request-method-response)
-    request))
+    state))

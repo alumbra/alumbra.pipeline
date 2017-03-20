@@ -1,30 +1,14 @@
 (ns alumbra.ring.graphql
-  (:require [alumbra.ring.pipeline
-             [core :refer [pipeline->>]]
-             [canonicalize-operation :refer [canonicalize-operation]]
-             [check-body :refer [check-body]]
-             [check-request-method :refer [check-request-method]]
-             [execute-operation :refer [execute-operation]]
-             [parse-document :refer [parse-document]]
-             [validate-document :refer [validate-document]]]
-            [alumbra.ring.errors :as errors]
+  (:require [alumbra.ring
+             [pipeline :as pipeline]
+             [errors :as errors]]
             [ring.middleware.json :as json]))
-
-(defn- handle-graphql-request
-  [request opts]
-  (pipeline->> request
-               (check-request-method)
-               (check-body opts)
-               (parse-document opts)
-               (validate-document opts)
-               (canonicalize-operation opts)
-               (execute-operation opts)))
 
 (defn- make-graphql-handler
   "Generate a handler compatible with both the classical Ring style and the
    CPS one."
   [opts]
-  (let [handler-fn #(handle-graphql-request % opts)]
+  (let [handler-fn #(pipeline/run-request opts %)]
     (fn
       ([request]
        (handler-fn request))
