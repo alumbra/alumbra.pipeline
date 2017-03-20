@@ -37,32 +37,33 @@
 (defn handler
   "Generate a Ring Handler for handling GraphQL requests.
 
-   - `:parser`: a parser function for GraphQL documents (producing a value
+   - `:parserf-`: a parser function for GraphQL documents (producing a value
      conforming to either `:alumbra/document` or `:alumbra/parser-errors`),
-   - `:validator`: a function taking an `:alumbra/document` and producing either
+   - `:validator-fn`: a function taking an `:alumbra/document` and producing either
      `nil` or a value conforming to `:alumbra/validation-errors`,
-   - `:canonicalizer`: a function taking an `:alumbra/document` and producing
+   - `:canonicalize-fn`: a function taking an `:alumbra/document` and producing
      an `:alumbra/canonical-document`,
-   - `:context`: a function taking an HTTP request and returning a value
+   - `:context-fn`: a function taking an HTTP request and returning a value
      representing the context of the GraphQL query,
-   - `:executor`: an executor function, taking the request context, as well as
+   - `:executor-fn`: an executor function, taking the request context, as well as
      a map conforming to `:alumbra/canonical-operation` and returning the resolved
      result.
 
    The resulting handler will expect queries to be sent using `POST`,
    represented by a JSON map with the keys `\"operationName\"`, `\"query\"`
    and \"variables\"."
-  [{:keys [parser validator canonicalizer executor context] :as opts}]
-  {:pre [(fn? parser)
-         (fn? validator)
-         (fn? canonicalizer)
-         (fn? executor)]}
+  [{:keys [parser-fn validator-fn canonicalize-fn executor-fn context-fn]
+    :as opts}]
+  {:pre [(fn? parser-fn)
+         (fn? validator-fn)
+         (fn? canonicalize-fn)
+         (fn? executor-fn)]}
   (-> (make-graphql-handler
-        {:parser-fn       parser
-         :validator-fn    validator
-         :canonicalize-fn canonicalizer
-         :executor-fn     executor
-         :context-fn      context})
+        {:parser-fn       parser-fn
+         :validator-fn    validator-fn
+         :canonicalize-fn canonicalize-fn
+         :executor-fn     executor-fn
+         :context-fn      context-fn})
       (errors/wrap)
       (json/wrap-json-response)
       (json/wrap-json-body)))

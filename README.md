@@ -23,24 +23,24 @@ To create a GraphQL-capable endpoint, you need to supply a series of
 (require '[alumbra.ring.graphql :as graphql])
 
 (graphql/handler
-  {:parser        ...
-   :validator     ...
-   :canonicalizer ...
-   :context       (fn [request] (read-auth request))
-   :executor      (fn [context canonical-operation] ...)})
+  {:parser-fn       ...
+   :validator-fn    ...
+   :canonicalize-fn ...
+   :context-fn       (fn [request] (read-auth request))
+   :executor-fn      (fn [context canonical-operation] ...)})
 ```
 
 Note that:
 
-- `:parser` should consume an `InputStream` and return a value conforming to
+- `:parser-fn` should consume an `InputStream` and return a value conforming to
   either `:alumbra/document` or `:alumbra/parser-errors`,
-- `:validator` should consume an `:alumbra/document` and return either `nil` or
+- `:validator-fn` should consume an `:alumbra/document` and return either `nil` or
   a value conforming to `:alumbra/validation-errors`,
-- `:canonicalizer` should consume a validated `:alumbra/document` and return a
+- `:canonicalize-fn` should consume a validated `:alumbra/document` and return a
   value conforming to `:alumbra/canonical-document`,
-- `:context` should consume a Ring request map and produce any value
+- `:context-fn` should consume a Ring request map and produce any value
   representing the context of the GraphQL query,
-- `:executor` should consume the value produced by `:context`, as well as an
+- `:executor-fn` should consume the value produced by `:context`, as well as an
   `:alumbra/canonical-operation`, and produce the resolved value as a map.
 
 A variant of this handler that uses pre-defined components can be found in

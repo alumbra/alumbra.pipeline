@@ -23,15 +23,19 @@
 
 ;; ## Handler
 
+(defn make-opts
+  [executor-opts & [opts]]
+  (merge
+    {:parser-fn       parser/parse-document
+     :validator-fn    (validator/validator schema)
+     :canonicalize-fn (analyzer/canonicalizer schema)
+     :executor-fn     (claro/executor (merge {:schema schema} executor-opts))}
+    opts))
+
 (defn make-handler
   [executor-opts & [opts]]
   (graphql/handler
-    (merge
-      {:parser        parser/parse-document
-       :validator     (validator/validator schema)
-       :canonicalizer (analyzer/canonicalizer schema)
-       :executor      (claro/executor (merge {:schema schema} executor-opts))}
-      opts)))
+    (make-opts executor-opts opts)))
 
 (defn- as-input-stream
   [body]
