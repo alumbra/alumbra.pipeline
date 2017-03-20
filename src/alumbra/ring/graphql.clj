@@ -21,7 +21,7 @@
 (defn handler
   "Generate a Ring Handler for handling GraphQL requests.
 
-   - `:parserf-`: a parser function for GraphQL documents (producing a value
+   - `:parser-fn`: a parser function for GraphQL documents (producing a value
      conforming to either `:alumbra/document` or `:alumbra/parser-errors`),
    - `:validator-fn`: a function taking an `:alumbra/document` and producing either
      `nil` or a value conforming to `:alumbra/validation-errors`,
