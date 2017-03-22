@@ -18,7 +18,8 @@
                  {:me {:name "Me"}}})
         {:keys [status body]} (is (query "{ me { } }"))]
     (is (= 400 status))
-    (let [{:keys [locations context]} (-> body :errors first)]
+    (let [{:keys [message locations context]} (-> body :errors first)]
+      (is (re-find #"mismatched input '}'" message))
       (is (= [{:row 1, :column 8}] locations))
       (is (= {:type "parser-error"} context)))))
 

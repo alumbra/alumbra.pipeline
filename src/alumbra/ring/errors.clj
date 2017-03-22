@@ -67,14 +67,14 @@
 
 (defn format-parser-errors
   [parser-errors]
-  (for [{:keys [alumbra/parser-error-message
+  (for [{:keys [alumbra/error-message
                 alumbra/location]} parser-errors
         :let [{:keys [row column]} location]]
     {:message
      (format "Syntax Error GraphQL Request (%d:%d) %s"
              (inc row)
              (inc column)
-             parser-error-message)
+             error-message)
      :locations
      [{:row (inc row)
        :column (inc column)}]
