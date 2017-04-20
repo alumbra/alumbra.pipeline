@@ -61,7 +61,7 @@
             :column (inc column)})}))))
 
 (defn validation-error-response
-  [validation-errors]
+  [{:keys [alumbra/validation-errors]}]
   (->> (format-validation-errors validation-errors)
        (error-response 400)))
 
