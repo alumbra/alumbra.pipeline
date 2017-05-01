@@ -1,5 +1,4 @@
-(ns alumbra.ring.pipeline.canonicalize-operation
-  (:require [alumbra.ring.pipeline.core :refer [done!]]))
+(ns alumbra.pipeline.steps.canonicalize-operation)
 
 (defn canonicalize-operation
   [{:keys [canonicalize-fn]}

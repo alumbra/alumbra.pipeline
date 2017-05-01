@@ -1,6 +1,5 @@
-(ns alumbra.ring.fixtures
-  (:require [alumbra.ring.graphql :as graphql]
-            [alumbra
+(ns alumbra.pipeline.fixtures
+  (:require [alumbra
              [claro :as claro]
              [analyzer :as analyzer]
              [parser :as parser]
@@ -32,10 +31,9 @@
      :executor-fn     (claro/executor (merge {:schema schema} executor-opts))}
     opts))
 
-(defn make-handler
-  [executor-opts & [opts]]
-  (graphql/handler
-    (make-opts executor-opts opts)))
+(defn partial-opts
+  [f opts]
+  (partial f (make-opts opts)))
 
 (defn- as-input-stream
   [body]
@@ -53,7 +51,3 @@
         (handler)
         (update :body #(some-> % (json/parse-string keyword)))
         (assoc :request request))))
-
-(defn make-query
-  [& args]
-  (partial #'query (apply make-handler args)))

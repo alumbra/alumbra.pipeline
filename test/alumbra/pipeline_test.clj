@@ -1,11 +1,17 @@
-(ns alumbra.ring.graphql-test
+(ns alumbra.pipeline-test
   (:require [clojure.test :refer :all]
-            [alumbra.ring.fixtures :as fix]
+            [alumbra.pipeline.fixtures :as fix]
+            [alumbra.pipeline :as pipeline]
             [claro.data :as data]
             [cheshire.core :as json]))
 
+(defn make-query
+  [opts]
+  (partial fix/query
+           (pipeline/handler (fix/make-opts opts))))
+
 (deftest t-simple-query
-  (let [query (fix/make-query
+  (let [query (make-query
                 {:query
                  {:me {:name "Me"}}})
         {:keys [status body]} (is (query "{ me { name } }"))]
@@ -13,7 +19,7 @@
     (is (= {:data {:me {:name "Me"}}} body))))
 
 (deftest t-bad-query
-  (let [query (fix/make-query
+  (let [query (make-query
                 {:query
                  {:me {:name "Me"}}})
         {:keys [status body]} (is (query "{ me { } }"))]
@@ -21,20 +27,20 @@
     (let [{:keys [message locations context]} (-> body :errors first)]
       (is (re-find #"mismatched input '}'" message))
       (is (= [{:row 1, :column 8}] locations))
-      (is (= {:type "parser-error"} context)))))
+      (is (= "parser-error" (:type context))))))
 
 (deftest t-invalid-query
-  (let [query (fix/make-query
+  (let [query (make-query
                 {:query
                  {:me {:name "Me"}}})
         {:keys [status body]} (is (query "{ me { unknownField } }"))]
     (is (= 400 status))
     (let [{:keys [locations context]} (-> body :errors first)]
       (is (= [{:row 1, :column 8}] locations))
-      (is (= {:type "validation-error"} context)))))
+      (is (= "validation-error" (:type context))))))
 
 (deftest t-partially-failing-query
-  (let [query (fix/make-query
+  (let [query (make-query
                 {:query
                  {:me (reify data/Resolvable
                         (resolve! [_ _]
@@ -47,7 +53,7 @@
            body))))
 
 (deftest t-exception-query
-  (let [query (fix/make-query
+  (let [query (make-query
                 {:query
                  {:me (reify data/Resolvable
                         (resolve! [_ _]

@@ -1,4 +1,4 @@
-(ns alumbra.ring.pipeline.set-request-context)
+(ns alumbra.pipeline.steps.set-request-context)
 
 (defn set-request-context
   [{:keys [context-fn]} {:keys [request] :as state}]

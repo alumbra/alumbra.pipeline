@@ -1,18 +1,6 @@
-(ns alumbra.ring.pipeline.read-body
-  (:require [alumbra.ring.pipeline.core :refer [done!]]
-            [alumbra.ring.errors :as errors]
+(ns alumbra.pipeline.steps.read-body
+  (:require [alumbra.pipeline.steps.core :as pipeline]
             [cheshire.core :as json]))
-
-(def ^:private invalid-variables-string-response
-  (errors/single-error-response
-    400
-    (str "If the 'variables' field is given as a string, "
-         "it needs to contain valid JSON")))
-
-(def ^:private invalid-variables-response
-  (errors/single-error-response
-    400
-    "The 'variables' field needs to be given as a JSON object."))
 
 (defn add-variables
   [state variables]
@@ -26,13 +14,13 @@
                                    [false t]))]
           (if success?
             (recur state value)
-            (done! invalid-variables-string-response)))
+            (pipeline/failure! state :invalid-variables-json)))
 
         (map? variables)
         (assoc state :variables variables)
 
         :else
-        (done! invalid-variables-response)))
+        (pipeline/failure! state :invalid-variables)))
 
 (defn read-body
   [_ {{:keys [body]} :request, :as state}]

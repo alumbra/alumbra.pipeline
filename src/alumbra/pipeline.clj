@@ -1,14 +1,40 @@
-(ns alumbra.ring.graphql
-  (:require [alumbra.ring
-             [pipeline :as pipeline]
-             [errors :as errors]]
+(ns alumbra.pipeline
+  (:require [alumbra.pipeline
+             [steps :as steps]
+             [ring :as ring]]
             [ring.middleware.json :as json]))
 
-(defn- make-graphql-handler
-  "Generate a handler compatible with both the classical Ring style and the
-   CPS one."
+;; ## Executor
+
+(defn executor
+  "Create a function that takes a query string, as well as an optional map of
+   `:variables`, `:operation-name` and `:context` and produces the result of
+   executing the query.
+
+   ```clojure
+   (def run-query
+     (alumbra.pipeline/executor opts))
+
+   (run-query \"{ me { name } }\")
+   ;; => {:status :success, :data {\"me\" { ... }}, ...}
+   ```
+
+   See [[alumbra.pipeline.steps/run]] for the necessary `opts` and the expected
+   result format."
   [opts]
-  (let [handler-fn #(pipeline/run-request opts %)]
+  (fn [query & [{:keys [variables operation-name context]
+                 :or   {variables {}}}]]
+    (->> {:query          query
+          :variables      variables
+          :operation-name operation-name
+          :context        context}
+         (steps/run opts))))
+
+;; ## Handler
+
+(defn- make-graphql-handler
+  [opts]
+  (let [handler-fn (comp ring/as-response #(steps/run-ring-request opts %))]
     (fn
       ([request]
        (handler-fn request))
@@ -36,8 +62,7 @@
    The resulting handler will expect queries to be sent using `POST`,
    represented by a JSON map with the keys `\"operationName\"`, `\"query\"`
    and \"variables\"."
-  [{:keys [parser-fn validator-fn canonicalize-fn executor-fn context-fn]
-    :as opts}]
+  [{:keys [parser-fn validator-fn canonicalize-fn executor-fn context-fn]}]
   {:pre [(fn? parser-fn)
          (fn? validator-fn)
          (fn? canonicalize-fn)
@@ -48,6 +73,5 @@
          :canonicalize-fn canonicalize-fn
          :executor-fn     executor-fn
          :context-fn      context-fn})
-      (errors/wrap)
       (json/wrap-json-response)
       (json/wrap-json-body)))

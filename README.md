@@ -1,28 +1,27 @@
-# alumbra.ring
+# alumbra.pipeline
 
-This library provides a Ring handler implementation for [GraphQL][graphql] query
-execution, as well as the interactive [GraphiQL][graphiql] environment. It uses
+This library provides a pipeline implementation for [GraphQL][graphql] query
+execution, as well as a Ring-compatible handler encapsulating this task. It uses
 pluggable components that consume/produce data structures as described in
 [alumbra.spec][alumbra-spec].
 
-[![Build Status](https://travis-ci.org/alumbra/alumbra.ring.svg?branch=master)](https://travis-ci.org/alumbra/alumbra.ring)
-[![Clojars Project](https://img.shields.io/clojars/v/alumbra/ring.svg)](https://clojars.org/alumbra/ring)
+[![Build Status](https://travis-ci.org/alumbra/alumbra.pipeline.svg?branch=master)](https://travis-ci.org/alumbra/alumbra.pipeline)
+[![Clojars Project](https://img.shields.io/clojars/v/alumbra/pipeline.svg)](https://clojars.org/alumbra/pipeline)
 
 [graphql]: http://graphql.org
-[graphiql]: https://github.com/graphql/graphiql
 [alumbra-spec]: https://github.com/alumbra/alumbra.spec
 
 ## Usage
 
-### GraphQL Execution
+### Ring Handler
 
-To create a GraphQL-capable endpoint, you need to supply a series of
+To create a GraphQL-capable Ring endpoint, you need to supply a series of
 [alumbra.spec][alumbra-spec]-compatible components:
 
 ```clojure
-(require '[alumbra.ring.graphql :as graphql])
+(require '[alumbra.pipeline :as pipeline])
 
-(graphql/handler
+(pipeline/handler
   {:parser-fn       ...
    :validator-fn    ...
    :canonicalize-fn ...
@@ -48,20 +47,10 @@ the main [alumbra][alumbra] repository.
 
 [alumbra]: https://github.com/alumbra/alumbra
 
-### GraphiQL Web UI
+### Raw Executor
 
-To create a Ring handler exposing the interactive [GraphiQL][graphiql]
-environment you just have to supply the path (or URL) of your GraphQL endpoint.
-
-```clojure
-(require '[alumbra.ring.graphiql :as graphiql])
-(graphiql/handler "/path/to/graphql")
-```
-
-Assets will – by default – be loaded from [cdnjs][cdnjs]. See the docstring
-on how to customize this behaviour.
-
-[cdnjs]: https://cdnjs.com/
+A low-level query executor can be constructed using `alumbra.pipeline/executor`.
+See its docstring for more information.
 
 ## License
 
