@@ -47,7 +47,8 @@
         {:context
          (cond-> {:type  error-type}
            context (assoc :query context)
-           hint    (assoc :hint  hint))})))
+           hint    (assoc :hint  hint))})
+      (select-keys [:locations :message :context])))
 
 (defn- validation-error-response
   [{:keys [errors query]}]
