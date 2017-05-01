@@ -32,7 +32,7 @@
   {:status status
    :body   {:errors [{:message error-message}]}})
 
-(defn format-error
+(defn- format-error
   [{:keys [context hint] :as error} error-type]
   (-> error
       (update :locations

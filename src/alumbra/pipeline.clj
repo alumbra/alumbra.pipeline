@@ -61,7 +61,7 @@
 
    The resulting handler will expect queries to be sent using `POST`,
    represented by a JSON map with the keys `\"operationName\"`, `\"query\"`
-   and \"variables\"."
+   and `\"variables\"`."
   [{:keys [parser-fn validator-fn canonicalize-fn executor-fn context-fn]}]
   {:pre [(fn? parser-fn)
          (fn? validator-fn)
