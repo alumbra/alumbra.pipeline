@@ -21,7 +21,7 @@
              :codox
              {:plugins [[lein-codox "0.10.3"]]
               :dependencies [[codox-theme-rdash "0.1.2"]]
-              :codox {:project {:name "alumbra.ring"}
+              :codox {:project {:name "alumbra.pipeline"}
                       :metadata {:doc/format :markdown}
                       :themes [:rdash]
                       :source-uri "https://github.com/alumbra/alumbra.pipeline/blob/v{version}/{filepath}#L{line}"
