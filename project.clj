@@ -1,4 +1,4 @@
-(defproject alumbra/pipeline "0.1.0-SNAPSHOT"
+(defproject alumbra/pipeline "0.2.0-SNAPSHOT"
   :description "A pipeline for GraphQL execution, as well as a Ring handler."
   :url "https://github.com/alumbra/alumbra.ring"
   :license {:name "MIT License"
